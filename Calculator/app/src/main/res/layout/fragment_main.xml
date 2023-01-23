@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/resultTextView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        tools:text="125"
+        android:textSize="50sp"
+        android:textAlignment="textEnd"
+        android:background="#FFFFFF"
+        android:paddingTop="15dp"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/clearButton"/>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="#838383"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/numbersBackground"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <View
+        android:id="@+id/numbersBackground"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#838383"
+        app:layout_constraintTop_toBottomOf="@id/resultTextView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <Button
+        android:id="@+id/clearButton"
+        style="@style/numbersButton"
+        android:text="C"
+        android:backgroundTint="#D63D32"
+        android:insetLeft="0dp"
+        app:layout_constraintBottom_toTopOf="@id/numberSevenButton"
+        app:layout_constraintEnd_toStartOf="@id/sqrButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/resultTextView" />
+
+    <Button
+        android:id="@+id/sqrButton"
+        style="@style/numbersButton"
+        android:text="^2"
+        android:backgroundTint="#393CD3"
+        app:layout_constraintTop_toTopOf="@id/clearButton"
+        app:layout_constraintStart_toEndOf="@id/clearButton"
+        app:layout_constraintEnd_toStartOf="@id/percentButton"
+        app:layout_constraintBottom_toTopOf="@id/numberEightButton"/>
+
+    <Button
+        android:id="@+id/percentButton"
+        style="@style/numbersButton"
+        android:text="%"
+        android:backgroundTint="#393CD3"
+        app:layout_constraintTop_toTopOf="@id/clearButton"
+        app:layout_constraintStart_toEndOf="@id/sqrButton"
+        app:layout_constraintEnd_toStartOf="@id/divButton"
+        app:layout_constraintBottom_toTopOf="@id/numberNineButton"/>
+
+    <Button
+        android:id="@+id/divButton"
+        style="@style/numbersButton"
+        android:text="/"
+        android:backgroundTint="#393CD3"
+        app:layout_constraintTop_toTopOf="@id/clearButton"
+        app:layout_constraintStart_toEndOf="@id/percentButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/multipleButton"/>
+
+    <Button
+        android:id="@+id/numberSevenButton"
+        style="@style/numbersButton"
+        android:text="7"
+        android:insetLeft="0dp"
+        app:layout_constraintBottom_toTopOf="@id/numberFourButton"
+        app:layout_constraintEnd_toStartOf="@id/numberEightButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/clearButton" />
+
+    <Button
+        android:id="@+id/numberEightButton"
+        style="@style/numbersButton"
+        android:text="8"
+        app:layout_constraintTop_toTopOf="@id/numberSevenButton"
+        app:layout_constraintStart_toEndOf="@id/numberSevenButton"
+        app:layout_constraintEnd_toStartOf="@id/numberNineButton"
+        app:layout_constraintBottom_toTopOf="@id/numberFiveButton"/>
+
+    <Button
+        android:id="@+id/numberNineButton"
+        style="@style/numbersButton"
+        android:text="9"
+        app:layout_constraintTop_toTopOf="@id/numberSevenButton"
+        app:layout_constraintStart_toEndOf="@id/numberEightButton"
+        app:layout_constraintEnd_toStartOf="@id/multipleButton"
+        app:layout_constraintBottom_toTopOf="@id/numberSixButton"/>
+
+    <Button
+        android:id="@+id/multipleButton"
+        style="@style/numbersButton"
+        android:text="x"
+        android:backgroundTint="#393CD3"
+        app:layout_constraintTop_toBottomOf="@id/divButton"
+        app:layout_constraintStart_toEndOf="@id/numberNineButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/minusButton"/>
+
+    <Button
+        android:id="@+id/numberFourButton"
+        style="@style/numbersButton"
+        android:text="4"
+        android:insetLeft="0dp"
+        app:layout_constraintTop_toBottomOf="@id/numberSevenButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/numberFiveButton"
+        app:layout_constraintBottom_toTopOf="@id/numberOneButton"/>
+
+    <Button
+        android:id="@+id/numberFiveButton"
+        style="@style/numbersButton"
+        android:text="5"
+        app:layout_constraintTop_toTopOf="@id/numberFourButton"
+        app:layout_constraintStart_toEndOf="@id/numberFourButton"
+        app:layout_constraintEnd_toStartOf="@id/numberSixButton"
+        app:layout_constraintBottom_toTopOf="@id/numberTwoButton"/>
+
+    <Button
+        android:id="@+id/numberSixButton"
+        style="@style/numbersButton"
+        android:text="6"
+        app:layout_constraintTop_toTopOf="@id/numberFourButton"
+        app:layout_constraintStart_toEndOf="@id/numberFiveButton"
+        app:layout_constraintEnd_toStartOf="@id/minusButton"
+        app:layout_constraintBottom_toTopOf="@id/numberThreeButton"/>
+
+    <Button
+        android:id="@+id/minusButton"
+        style="@style/numbersButton"
+        android:text="-"
+        android:backgroundTint="#393CD3"
+        app:layout_constraintTop_toBottomOf="@id/multipleButton"
+        app:layout_constraintStart_toEndOf="@id/numberSixButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/plusButton"/>
+
+    <Button
+        android:id="@+id/numberOneButton"
+        style="@style/numbersButton"
+        android:text="1"
+        android:insetLeft="0dp"
+        app:layout_constraintTop_toBottomOf="@id/numberFourButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/numberTwoButton"
+        app:layout_constraintBottom_toTopOf="@id/negativeButton"/>
+
+    <Button
+        android:id="@+id/numberTwoButton"
+        style="@style/numbersButton"
+        android:text="2"
+        app:layout_constraintTop_toTopOf="@id/numberOneButton"
+        app:layout_constraintStart_toEndOf="@id/numberOneButton"
+        app:layout_constraintEnd_toStartOf="@id/numberThreeButton"
+        app:layout_constraintBottom_toTopOf="@id/numberZeroButton"/>
+
+    <Button
+        android:id="@+id/numberThreeButton"
+        style="@style/numbersButton"
+        android:text="3"
+        app:layout_constraintTop_toTopOf="@id/numberOneButton"
+        app:layout_constraintStart_toEndOf="@id/numberTwoButton"
+        app:layout_constraintEnd_toStartOf="@id/plusButton"
+        app:layout_constraintBottom_toTopOf="@id/dotButton"/>
+
+    <Button
+        android:id="@+id/plusButton"
+        style="@style/numbersButton"
+        android:text="+"
+        android:backgroundTint="#393CD3"
+        app:layout_constraintTop_toBottomOf="@id/minusButton"
+        app:layout_constraintStart_toEndOf="@id/numberThreeButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/equalButton"/>
+
+    <Button
+        android:id="@+id/negativeButton"
+        style="@style/numbersButton"
+        android:text="+/-"
+        android:backgroundTint="#393CD3"
+        android:insetLeft="0dp"
+        android:insetBottom="0dp"
+        app:layout_constraintTop_toBottomOf="@id/numberOneButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/numberZeroButton"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/numberZeroButton"
+        style="@style/numbersButton"
+        android:text="0"
+        android:insetBottom="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/dotButton"
+        app:layout_constraintStart_toEndOf="@id/negativeButton"
+        app:layout_constraintTop_toTopOf="@id/negativeButton"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <Button
+        android:id="@+id/dotButton"
+        style="@style/numbersButton"
+        android:text="."
+        android:backgroundTint="#393CD3"
+        android:insetBottom="0dp"
+        app:layout_constraintTop_toTopOf="@id/negativeButton"
+        app:layout_constraintStart_toEndOf="@id/numberZeroButton"
+        app:layout_constraintEnd_toStartOf="@id/equalButton"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/equalButton"
+        style="@style/numbersButton"
+        android:text="="
+        android:backgroundTint="#393CD3"
+        android:insetBottom="0dp"
+        app:layout_constraintTop_toBottomOf="@id/plusButton"
+        app:layout_constraintStart_toEndOf="@id/dotButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
