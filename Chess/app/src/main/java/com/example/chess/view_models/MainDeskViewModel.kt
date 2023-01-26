@@ -13,11 +13,17 @@ private var desk = mutableListOf<Cell>()
 private var isFirstClick = true
 private var pickedCell = Cell(-1, -1, false, "")
 private var walkerName = 'w'
+private var canMoveMap = mapOf<Coordinates, Boolean>()
+private var possibleMoves = mutableMapOf<Coordinates, Boolean>()
+private var dangerZone = mutableMapOf<String, Coordinates>()
 
 class MainDeskViewModel : ViewModel() {
 
     private var _cellsPair = MutableLiveData<CellsPair>()
     var cellsPair : LiveData<CellsPair> = _cellsPair
+
+    private var _possibleMoveCells = MutableLiveData<Map<Coordinates, Boolean>>()
+    var possibleMoveCells : LiveData<Map<Coordinates, Boolean>> = _possibleMoveCells
 
     init {
         deskFill()
@@ -27,22 +33,37 @@ class MainDeskViewModel : ViewModel() {
     fun onCellPressed(row: Int, column: Int) {
         if (isFirstClick) {
             pickedCell = figureAvailabilityCheck(row, column)
+
+            if (pickedCell.hasFigure) {
+                isFirstClick = false
+                canMoveMap = currentFigureMove(pickedCell)
+                possibleMoves = checkToMove(canMoveMap)
+                _possibleMoveCells.value = possibleMoves
+            } else {
+                isFirstClick = true
+            }
+
             isFirstClick = pickedCell.hasFigure == false
         } else {
             val newPickedCell = figureAvailabilityCheck(row, column)
-            val canMove = currentFigureMove(pickedCell, newPickedCell)
             val opponentColorName = if (pickedCell.figureName.first() == 'w') {
                 'b'
             } else {
                 'w'
             }
 
-            Log.e("AEFP", "$walkerName : $opponentColorName")
             if((!newPickedCell.hasFigure || newPickedCell.figureName.first() == opponentColorName)
                 && walkerName == pickedCell.figureName.first()) {
-                if (canMove[Coordinates(newPickedCell.row, newPickedCell.column)] == true) {
+                if (canMoveMap[Coordinates(newPickedCell.row, newPickedCell.column)] == true) {
                     isFirstClick = true
-                    _cellsPair.value = CellsPair(pickedCell, Cell(row, column, false, ""))
+
+                    possibleMoves.forEach() {
+                        possibleMoves[it.key] = false
+                    }
+                    _possibleMoveCells.value = possibleMoves
+                    possibleMoves.clear()
+
+                    _cellsPair.value = CellsPair(pickedCell, newPickedCell)
 
                     val newPickedCellIndex = desk.indexOf(newPickedCell)
                     val pickedCellIndex = desk.indexOf(pickedCell)
@@ -58,9 +79,21 @@ class MainDeskViewModel : ViewModel() {
                     }
                 } else {
                     isFirstClick = true
+
+                    possibleMoves.forEach() {
+                        possibleMoves[it.key] = false
+                    }
+                    _possibleMoveCells.value = possibleMoves
+                    possibleMoves.clear()
                 }
             } else {
                 isFirstClick = true
+
+                possibleMoves.forEach() {
+                    possibleMoves[it.key] = false
+                }
+                _possibleMoveCells.value = possibleMoves
+                possibleMoves.clear()
             }
         }
     }
@@ -83,7 +116,7 @@ class MainDeskViewModel : ViewModel() {
     }
 
     // Проверка на возможность хода
-    private fun currentFigureMove(firstCell: Cell, secondCell: Cell) : Map<Coordinates, Boolean> {
+    private fun currentFigureMove(firstCell: Cell) : Map<Coordinates, Boolean> {
         val canMoveMap = mutableMapOf<Coordinates, Boolean>()
         val name = firstCell.figureName.substring(6)
 
@@ -96,89 +129,15 @@ class MainDeskViewModel : ViewModel() {
         if (firstCell.figureName.isNotEmpty()) {
             when (name) {
                 "pawn" -> {
-                    if (firstCell.figureName.first() == 'w') {
-                        if (firstCell.row == 2) {
-                            var moveVariationIndex = desk.indexOf(firstCell)
-
-                            for (i in 1..2) {
-                                moveVariationIndex += 8
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    !desk[moveVariationIndex].hasFigure
-                            }
-                            moveVariationIndex = desk.indexOf(firstCell)
-                            moveVariationIndex += 9
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'b'
-                            }
-
-                            moveVariationIndex -= 2
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'b'
-                            }
-                        } else {
-                            var moveVariationIndex = desk.indexOf(firstCell)
-
-                            moveVariationIndex += 8
-                            canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                !desk[moveVariationIndex].hasFigure
-
-                            moveVariationIndex = desk.indexOf(firstCell)
-                            moveVariationIndex += 9
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'b'
-                            }
-
-                            moveVariationIndex -= 2
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'b'
-                            }
-                        }
+                    val tempCanMoveMap = if (firstCell.row == 2 && firstCell.figureName.first() == 'w') {
+                        pawnMoves(firstCell,2,opponentFigureName)
+                    } else if (firstCell.row == 7 && firstCell.figureName.first() == 'b') {
+                        pawnMoves(firstCell,2,opponentFigureName)
                     } else {
-                        if (firstCell.row == 7) {
-                            var moveVariationIndex = desk.indexOf(firstCell)
-
-                            for (i in 1..2) {
-                                moveVariationIndex -= 8
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    !desk[moveVariationIndex].hasFigure
-                            }
-                            moveVariationIndex = desk.indexOf(firstCell)
-                            moveVariationIndex -= 9
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'w'
-                            }
-
-                            moveVariationIndex += 2
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'w'
-                            }
-                        } else {
-                            var moveVariationIndex = desk.indexOf(firstCell)
-
-                            moveVariationIndex -= 8
-                            canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                !desk[moveVariationIndex].hasFigure
-
-                            moveVariationIndex = desk.indexOf(firstCell)
-                            moveVariationIndex -= 9
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'w'
-                            }
-
-                            moveVariationIndex += 2
-                            if (desk[moveVariationIndex].hasFigure) {
-                                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] =
-                                    desk[moveVariationIndex].figureName.first() == 'w'
-                            }
-                        }
+                        pawnMoves(firstCell,1,opponentFigureName)
                     }
+
+                    canMoveMap += tempCanMoveMap
                 }
 
                 "rook" -> {
@@ -211,15 +170,17 @@ class MainDeskViewModel : ViewModel() {
                 }
 
                 "knight" -> {
-                    if (secondCell.column == firstCell.column + 2 || secondCell.column == firstCell.column - 2) {
-                        if (secondCell.row == firstCell.row + 1 || secondCell.row == firstCell.row -1) {
-                            canMoveMap[Coordinates(secondCell.row, secondCell.column)] = true
-                        }
-                    } else if (secondCell.row == firstCell.row + 2 || secondCell.row == firstCell.row - 2) {
-                        if (secondCell.column == firstCell.column + 1 || secondCell.column == firstCell.column - 1) {
-                            canMoveMap[Coordinates(secondCell.row, secondCell.column)] = true
-                        }
-                    }
+                    var tempCanMoveMap = knightMoves(firstCell, "vertical", "up", opponentFigureName)
+                    canMoveMap += tempCanMoveMap
+
+                    tempCanMoveMap = knightMoves(firstCell, "vertical", "down", opponentFigureName)
+                    canMoveMap += tempCanMoveMap
+
+                    tempCanMoveMap = knightMoves(firstCell, "horizontal", "up", opponentFigureName)
+                    canMoveMap += tempCanMoveMap
+
+                    tempCanMoveMap = knightMoves(firstCell, "horizontal", "down", opponentFigureName)
+                    canMoveMap += tempCanMoveMap
                 }
 
                 "queen" -> {
@@ -245,6 +206,113 @@ class MainDeskViewModel : ViewModel() {
                 "king" -> {
                     val tempCanMoveMap = kingMoves(firstCell,opponentFigureName)
                     canMoveMap += tempCanMoveMap
+                }
+            }
+        }
+
+        return canMoveMap
+    }
+
+    // Расчет ходов пешки
+    private fun pawnMoves(firstCell: Cell, moveAmount: Int, opponentFigureName: Char) : Map<Coordinates, Boolean> {
+        val canMoveMap = mutableMapOf<Coordinates, Boolean>()
+        var moveVariationIndex = desk.indexOf(firstCell)
+        var coefficient = 8
+
+        if (opponentFigureName == 'w') {
+            coefficient *= -1
+        }
+
+        for (i in 1..moveAmount) {
+            moveVariationIndex += coefficient
+
+            if (moveVariationIndex > 64 || moveVariationIndex < 1) {
+                break
+            }
+
+            if (i == 1) {
+                if (desk[moveVariationIndex].column != 8) {
+                    if (desk[moveVariationIndex + 1].hasFigure) {
+                        canMoveMap[Coordinates(
+                            desk[moveVariationIndex + 1].row,
+                            desk[moveVariationIndex + 1].column
+                        )] = desk[moveVariationIndex + 1].figureName.first() == opponentFigureName
+                    } else {
+                        canMoveMap[Coordinates(
+                            desk[moveVariationIndex + 1].row,
+                            desk[moveVariationIndex + 1].column
+                        )] = false
+                    }
+                }
+                if (desk[moveVariationIndex].column != 1) {
+                    if (desk[moveVariationIndex - 1].hasFigure) {
+                        canMoveMap[Coordinates(
+                            desk[moveVariationIndex - 1].row,
+                            desk[moveVariationIndex - 1].column
+                        )] = desk[moveVariationIndex - 1].figureName.first() == opponentFigureName
+                    } else {
+                        canMoveMap[Coordinates(
+                            desk[moveVariationIndex - 1].row,
+                            desk[moveVariationIndex - 1].column
+                        )] = false
+                    }
+                }
+            }
+
+            if (desk[moveVariationIndex].hasFigure) {
+                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] = false
+                break
+            } else {
+                canMoveMap[Coordinates(desk[moveVariationIndex].row, desk[moveVariationIndex].column)] = true
+            }
+        }
+
+        return canMoveMap
+    }
+
+    // Расчет ходов коня
+    private fun knightMoves(firstCell: Cell, moveOrientation: String, moveRoute: String, opponentFigureName: Char) : Map<Coordinates, Boolean> {
+        val canMoveMap = mutableMapOf<Coordinates, Boolean>()
+        var moveVariationIndex = desk.indexOf(firstCell)
+        var coefficient = 0
+
+        if (moveOrientation == "vertical") {
+            coefficient = 1
+            if (moveRoute == "up") {
+                moveVariationIndex += 16
+            } else {
+                moveVariationIndex -= 16
+            }
+        } else {
+            coefficient = 8
+            if (moveRoute == "up") {
+                moveVariationIndex += 2
+            } else {
+                moveVariationIndex -= 2
+            }
+        }
+
+        for (i in 1..2) {
+            if (i == 2) {
+                coefficient *= -2
+            }
+
+            moveVariationIndex += coefficient
+
+            if (moveVariationIndex > 63 || moveVariationIndex < 1) {
+                continue
+            } else {
+                if (desk[moveVariationIndex].hasFigure) {
+                    canMoveMap[Coordinates(
+                        desk[moveVariationIndex].row,
+                        desk[moveVariationIndex].column
+                    )] =
+                        desk[moveVariationIndex].figureName.first() == opponentFigureName
+                } else {
+                    canMoveMap[Coordinates(
+                        desk[moveVariationIndex].row,
+                        desk[moveVariationIndex].column
+                    )] = true
                 }
             }
         }
@@ -461,6 +529,18 @@ class MainDeskViewModel : ViewModel() {
         return canMoveMap
     }
 
+    // Проверка на возможный ход для добавления в список возможных ходов который нужен для отрисовки
+    private fun checkToMove(moves: Map<Coordinates, Boolean>) : MutableMap<Coordinates, Boolean> {
+        val possibleMoves = mutableMapOf<Coordinates, Boolean>()
+        moves.forEach{ move ->
+            if (move.value) {
+                possibleMoves[move.key] = move.value
+            }
+        }
+
+        return possibleMoves
+    }
+
     // Создание шахмотной доски и заполнение фигурами
     private fun deskFill() {
         for (i in 1..8) {
@@ -468,13 +548,16 @@ class MainDeskViewModel : ViewModel() {
                 if (i in 3..6){
                     desk.add(Cell(i,j, false,""))
                 } else {
-                    if (i == 2) {
-                        desk.add(Cell(i,j, true,"white_pawn"))
-                    } else if (i == 7) {
-                        desk.add(Cell(i,j, true,"black_pawn"))
-                    }
-                    else {
-                        desk.add(Cell(i,j, true,""))
+                    when (i) {
+                        2 -> {
+                            desk.add(Cell(i,j, true,"white_pawn"))
+                        }
+                        7 -> {
+                            desk.add(Cell(i,j, true,"black_pawn"))
+                        }
+                        else -> {
+                            desk.add(Cell(i,j, true,""))
+                        }
                     }
                 }
             }

@@ -11,5 +11,7 @@
     <color name="white_piece">#EAEAEA</color>
     <color name="black_piece">#474747</color>
     <color name="white_cell">#DFCCB5</color>
-    <color name="black_cell">#F85C564F</color>
+    <color name="black_cell">#F75C564F</color>
+    <color name="eat_cell">#4C682B</color>
+
 </resources>

@@ -1,14 +1,16 @@
 package com.example.chess.fragments
 
+import android.graphics.Color
+import android.graphics.ColorSpace.Rgb
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.chess.CellHasFigure
 import com.example.chess.Coordinates
 import com.example.chess.R
 import com.example.chess.databinding.FragmentDeskBinding
@@ -17,56 +19,56 @@ import com.example.chess.view_models.MainDeskViewModel
 class MainDeskFragment : Fragment() {
 
     private lateinit var binding : FragmentDeskBinding
-    private lateinit var desk : Map<Coordinates, ImageView>
+    private lateinit var desk : Map<Coordinates, CellHasFigure>
     private val viewModel: MainDeskViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentDeskBinding.inflate(inflater, container, false)
 
-        desk = mapOf<Coordinates, ImageView>(
-            Coordinates(1,1) to binding.cellA1, Coordinates(1,2) to binding.cellB1,
-            Coordinates(1,3) to binding.cellC1, Coordinates(1,4) to binding.cellD1,
-            Coordinates(1,5) to binding.cellE1, Coordinates(1,6) to binding.cellF1,
-            Coordinates(1,7) to binding.cellG1, Coordinates(1,8) to binding.cellH1,
+        desk = mapOf<Coordinates, CellHasFigure>(
+            Coordinates(1,1) to CellHasFigure(binding.cellA1, true), Coordinates(1,2) to CellHasFigure(binding.cellB1, true),
+            Coordinates(1,3) to CellHasFigure(binding.cellC1, true), Coordinates(1,4) to CellHasFigure(binding.cellD1, true),
+            Coordinates(1,5) to CellHasFigure(binding.cellE1, true), Coordinates(1,6) to CellHasFigure(binding.cellF1, true),
+            Coordinates(1,7) to CellHasFigure(binding.cellG1, true), Coordinates(1,8) to CellHasFigure(binding.cellH1, true),
 
-            Coordinates(2,1) to binding.cellA2, Coordinates(2,2) to binding.cellB2,
-            Coordinates(2,3) to binding.cellC2, Coordinates(2,4) to binding.cellD2,
-            Coordinates(2,5) to binding.cellE2, Coordinates(2,6) to binding.cellF2,
-            Coordinates(2,7) to binding.cellG2, Coordinates(2,8) to binding.cellH2,
+            Coordinates(2,1) to CellHasFigure(binding.cellA2, true), Coordinates(2,2) to CellHasFigure(binding.cellB2, true),
+            Coordinates(2,3) to CellHasFigure(binding.cellC2, true), Coordinates(2,4) to CellHasFigure(binding.cellD2, true),
+            Coordinates(2,5) to CellHasFigure(binding.cellE2, true), Coordinates(2,6) to CellHasFigure(binding.cellF2, true),
+            Coordinates(2,7) to CellHasFigure(binding.cellG2, true), Coordinates(2,8) to CellHasFigure(binding.cellH2, true),
 
-            Coordinates(3,1) to binding.cellA3, Coordinates(3,2) to binding.cellB3,
-            Coordinates(3,3) to binding.cellC3, Coordinates(3,4) to binding.cellD3,
-            Coordinates(3,5) to binding.cellE3, Coordinates(3,6) to binding.cellF3,
-            Coordinates(3,7) to binding.cellG3, Coordinates(3,8) to binding.cellH3,
+            Coordinates(3,1) to CellHasFigure(binding.cellA3, false), Coordinates(3,2) to CellHasFigure(binding.cellB3, false),
+            Coordinates(3,3) to CellHasFigure(binding.cellC3, false), Coordinates(3,4) to CellHasFigure(binding.cellD3, false),
+            Coordinates(3,5) to CellHasFigure(binding.cellE3, false), Coordinates(3,6) to CellHasFigure(binding.cellF3, false),
+            Coordinates(3,7) to CellHasFigure(binding.cellG3, false), Coordinates(3,8) to CellHasFigure(binding.cellH3, false),
 
-            Coordinates(4,1) to binding.cellA4, Coordinates(4,2) to binding.cellB4,
-            Coordinates(4,3) to binding.cellC4, Coordinates(4,4) to binding.cellD4,
-            Coordinates(4,5) to binding.cellE4, Coordinates(4,6) to binding.cellF4,
-            Coordinates(4,7) to binding.cellG4, Coordinates(4,8) to binding.cellH4,
+            Coordinates(4,1) to CellHasFigure(binding.cellA4, false), Coordinates(4,2) to CellHasFigure(binding.cellB4, false),
+            Coordinates(4,3) to CellHasFigure(binding.cellC4, false), Coordinates(4,4) to CellHasFigure(binding.cellD4, false),
+            Coordinates(4,5) to CellHasFigure(binding.cellE4, false), Coordinates(4,6) to CellHasFigure(binding.cellF4, false),
+            Coordinates(4,7) to CellHasFigure(binding.cellG4, false), Coordinates(4,8) to CellHasFigure(binding.cellH4, false),
 
-            Coordinates(5,1) to binding.cellA5, Coordinates(5,2) to binding.cellB5,
-            Coordinates(5,3) to binding.cellC5, Coordinates(5,4) to binding.cellD5,
-            Coordinates(5,5) to binding.cellE5, Coordinates(5,6) to binding.cellF5,
-            Coordinates(5,7) to binding.cellG5, Coordinates(5,8) to binding.cellH5,
+            Coordinates(5,1) to CellHasFigure(binding.cellA5, false), Coordinates(5,2) to CellHasFigure(binding.cellB5, false),
+            Coordinates(5,3) to CellHasFigure(binding.cellC5, false), Coordinates(5,4) to CellHasFigure(binding.cellD5, false),
+            Coordinates(5,5) to CellHasFigure(binding.cellE5, false), Coordinates(5,6) to CellHasFigure(binding.cellF5, false),
+            Coordinates(5,7) to CellHasFigure(binding.cellG5, false), Coordinates(5,8) to CellHasFigure(binding.cellH5, false),
 
-            Coordinates(6,1) to binding.cellA6, Coordinates(6,2) to binding.cellB6,
-            Coordinates(6,3) to binding.cellC6, Coordinates(6,4) to binding.cellD6,
-            Coordinates(6,5) to binding.cellE6, Coordinates(6,6) to binding.cellF6,
-            Coordinates(6,7) to binding.cellG6, Coordinates(6,8) to binding.cellH6,
+            Coordinates(6,1) to CellHasFigure(binding.cellA6, false), Coordinates(6,2) to CellHasFigure(binding.cellB6, false),
+            Coordinates(6,3) to CellHasFigure(binding.cellC6, false), Coordinates(6,4) to CellHasFigure(binding.cellD6, false),
+            Coordinates(6,5) to CellHasFigure(binding.cellE6, false), Coordinates(6,6) to CellHasFigure(binding.cellF6, false),
+            Coordinates(6,7) to CellHasFigure(binding.cellG6, false), Coordinates(6,8) to CellHasFigure(binding.cellH6, false),
 
-            Coordinates(7,1) to binding.cellA7, Coordinates(7,2) to binding.cellB7,
-            Coordinates(7,3) to binding.cellC7, Coordinates(7,4) to binding.cellD7,
-            Coordinates(7,5) to binding.cellE7, Coordinates(7,6) to binding.cellF7,
-            Coordinates(7,7) to binding.cellG7, Coordinates(7,8) to binding.cellH7,
+            Coordinates(7,1) to CellHasFigure(binding.cellA7, true), Coordinates(7,2) to CellHasFigure(binding.cellB7, true),
+            Coordinates(7,3) to CellHasFigure(binding.cellC7, true), Coordinates(7,4) to CellHasFigure(binding.cellD7, true),
+            Coordinates(7,5) to CellHasFigure(binding.cellE7, true), Coordinates(7,6) to CellHasFigure(binding.cellF7, true),
+            Coordinates(7,7) to CellHasFigure(binding.cellG7, true), Coordinates(7,8) to CellHasFigure(binding.cellH7, true),
 
-            Coordinates(8,1) to binding.cellA8, Coordinates(8,2) to binding.cellB8,
-            Coordinates(8,3) to binding.cellC8, Coordinates(8,4) to binding.cellD8,
-            Coordinates(8,5) to binding.cellE8, Coordinates(8,6) to binding.cellF8,
-            Coordinates(8,7) to binding.cellG8, Coordinates(8,8) to binding.cellH8,
+            Coordinates(8,1) to CellHasFigure(binding.cellA8, true), Coordinates(8,2) to CellHasFigure(binding.cellB8, true),
+            Coordinates(8,3) to CellHasFigure(binding.cellC8, true), Coordinates(8,4) to CellHasFigure(binding.cellD8, true),
+            Coordinates(8,5) to CellHasFigure(binding.cellE8, true), Coordinates(8,6) to CellHasFigure(binding.cellF8, true),
+            Coordinates(8,7) to CellHasFigure(binding.cellG8, true), Coordinates(8,8) to CellHasFigure(binding.cellH8, true),
         )
 
         with(binding) {
@@ -150,24 +152,55 @@ class MainDeskFragment : Fragment() {
             val firstCell = desk.getValue(firstCellCords)
             val secondCell = desk.getValue(secondCellCords)
 
-            secondCell.setImageDrawable(firstCell.drawable)
+            secondCell.imageView.setImageDrawable(firstCell.imageView.drawable)
+            secondCell.hasFigure = true
 
-            if (firstCellCords.row % 2 == 0) {
-                if (firstCellCords.column % 2 == 0) {
-                    firstCell.setImageResource(R.drawable.ic_black_cell)
+            emptyCellFill(firstCellCords, firstCell.imageView, "drawable")
+            firstCell.hasFigure = false
+        })
+
+        viewModel.possibleMoveCells.observe(viewLifecycleOwner, Observer{ possibleMoveMap ->
+            var cell: CellHasFigure
+
+            possibleMoveMap.forEach() {
+                cell = desk.getValue(it.key)
+                if (!cell.hasFigure) {
+                    if (it.value) {
+                        cell.imageView.setImageResource(R.drawable.ic_possible_move_cell)
+                    } else {
+                        emptyCellFill(it.key, cell.imageView, "drawable")
+                    }
                 } else {
-                    firstCell.setImageResource(R.drawable.ic_white_cell)
-                }
-            } else {
-                if (firstCellCords.column % 2 == 0) {
-                    firstCell.setImageResource(R.drawable.ic_white_cell)
-                } else {
-                    firstCell.setImageResource(R.drawable.ic_black_cell)
+                    if (it.value) {
+                        cell.imageView.setBackgroundColor(Color.rgb(76, 104, 43))
+                    } else {
+                        emptyCellFill(it.key, cell.imageView, "color")
+                    }
                 }
             }
         })
 
         return binding.root
+    }
+
+    private fun emptyCellFill(firstCellCords: Coordinates, firstCell: ImageView, type: String) {
+        if (firstCellCords.row % 2 == 0) {
+            if (firstCellCords.column % 2 == 0) {
+                if (type == "drawable") firstCell.setImageResource(R.drawable.ic_black_cell)
+                else firstCell.setBackgroundColor(Color.rgb(92, 86, 79))
+            } else {
+                if (type == "drawable") firstCell.setImageResource(R.drawable.ic_white_cell)
+                else firstCell.setBackgroundColor(Color.rgb(223, 204, 181))
+            }
+        } else {
+            if (firstCellCords.column % 2 == 0) {
+                if (type == "drawable") firstCell.setImageResource(R.drawable.ic_white_cell)
+                else firstCell.setBackgroundColor(Color.rgb(223, 204, 181))
+            } else {
+                if (type == "drawable") firstCell.setImageResource(R.drawable.ic_black_cell)
+                else firstCell.setBackgroundColor(Color.rgb(92, 86, 79))
+            }
+        }
     }
 
     private fun onCellPressed(row: Int, column: Int) {
