@@ -330,12 +330,12 @@
             <ImageView
                 android:id="@+id/cellA2"
                 style="@style/chess_cell"
-                android:src="@drawable/ic_chess_white_pawn"
+                android:src="@drawable/ic_white_cell"
                 android:background="@color/white_cell"/>
             <ImageView
                 android:id="@+id/cellB2"
                 style="@style/chess_cell"
-                android:src="@drawable/ic_chess_white_pawn"
+                android:src="@drawable/ic_black_cell"
                 android:background="@color/black_cell"/>
             <ImageView
                 android:id="@+id/cellC2"
@@ -380,12 +380,12 @@
                 android:id="@+id/cellA1"
                 style="@style/chess_cell"
                 android:background="@color/black_cell"
-                android:src="@drawable/ic_chess_white_rook" />
+                android:src="@drawable/ic_black_cell" />
 
             <ImageView
                 android:id="@+id/cellB1"
                 style="@style/chess_cell"
-                android:src="@drawable/ic_chess_white_knight"
+                android:src="@drawable/ic_white_cell"
                 android:background="@color/white_cell" />
             <ImageView
                 android:id="@+id/cellC1"

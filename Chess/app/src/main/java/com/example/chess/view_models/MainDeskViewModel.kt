@@ -1,13 +1,11 @@
 package com.example.chess.view_models
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chess.Cell
 import com.example.chess.CellsPair
 import com.example.chess.Coordinates
-import kotlin.math.abs
 
 private var desk = mutableListOf<Cell>()
 private var isFirstClick = true
@@ -15,15 +13,17 @@ private var pickedCell = Cell(-1, -1, false, "")
 private var walkerName = 'w'
 private var canMoveMap = mapOf<Coordinates, Boolean>()
 private var possibleMoves = mutableMapOf<Coordinates, Boolean>()
-private var dangerZone = mutableMapOf<String, Coordinates>()
 
 class MainDeskViewModel : ViewModel() {
 
-    private var _cellsPair = MutableLiveData<CellsPair>()
-    var cellsPair : LiveData<CellsPair> = _cellsPair
+    private var _activityDesk = MutableLiveData<List<Cell>>()
+    var activityDesk : LiveData<List<Cell>> = _activityDesk
 
     private var _possibleMoveCells = MutableLiveData<Map<Coordinates, Boolean>>()
     var possibleMoveCells : LiveData<Map<Coordinates, Boolean>> = _possibleMoveCells
+
+    private var _gameOver = MutableLiveData<Boolean>()
+    var gameOver : LiveData<Boolean> = _gameOver
 
     init {
         deskFill()
@@ -63,7 +63,15 @@ class MainDeskViewModel : ViewModel() {
                     _possibleMoveCells.value = possibleMoves
                     possibleMoves.clear()
 
-                    _cellsPair.value = CellsPair(pickedCell, newPickedCell)
+                    if (pickedCell.figureName.substring(6).first() == 'p' && newPickedCell.row == 8) {
+                        //TODO Превращение пешки
+                    } else if (pickedCell.figureName.substring(6).first() == 'p' && newPickedCell.row == 1) {
+                        //TODO Превращение пешки
+                    }
+
+                    if (newPickedCell.hasFigure && newPickedCell.figureName.last() == 'g') {
+                        _gameOver.value = true
+                    }
 
                     val newPickedCellIndex = desk.indexOf(newPickedCell)
                     val pickedCellIndex = desk.indexOf(pickedCell)
@@ -71,6 +79,8 @@ class MainDeskViewModel : ViewModel() {
                     desk[newPickedCellIndex].figureName = desk[pickedCellIndex].figureName
                     desk[pickedCellIndex].hasFigure = false
                     desk[pickedCellIndex].figureName = ""
+
+                    _activityDesk.value = desk
 
                     walkerName = if (walkerName == 'w') {
                         'b'
@@ -115,7 +125,7 @@ class MainDeskViewModel : ViewModel() {
         return Cell(defaultRow, defaultColumn, false, "")
     }
 
-    // Проверка на возможность хода
+    // Проверка на возможные ходы
     private fun currentFigureMove(firstCell: Cell) : Map<Coordinates, Boolean> {
         val canMoveMap = mutableMapOf<Coordinates, Boolean>()
         val name = firstCell.figureName.substring(6)
@@ -302,17 +312,21 @@ class MainDeskViewModel : ViewModel() {
             if (moveVariationIndex > 63 || moveVariationIndex < 1) {
                 continue
             } else {
-                if (desk[moveVariationIndex].hasFigure) {
-                    canMoveMap[Coordinates(
-                        desk[moveVariationIndex].row,
-                        desk[moveVariationIndex].column
-                    )] =
-                        desk[moveVariationIndex].figureName.first() == opponentFigureName
+                if (desk[moveVariationIndex].column > firstCell.column + 2 || desk[moveVariationIndex].column < firstCell.column - 2) {
+                    continue
                 } else {
-                    canMoveMap[Coordinates(
-                        desk[moveVariationIndex].row,
-                        desk[moveVariationIndex].column
-                    )] = true
+                    if (desk[moveVariationIndex].hasFigure) {
+                        canMoveMap[Coordinates(
+                            desk[moveVariationIndex].row,
+                            desk[moveVariationIndex].column
+                        )] =
+                            desk[moveVariationIndex].figureName.first() == opponentFigureName
+                    } else {
+                        canMoveMap[Coordinates(
+                            desk[moveVariationIndex].row,
+                            desk[moveVariationIndex].column
+                        )] = true
+                    }
                 }
             }
         }
@@ -534,7 +548,7 @@ class MainDeskViewModel : ViewModel() {
         val possibleMoves = mutableMapOf<Coordinates, Boolean>()
         moves.forEach{ move ->
             if (move.value) {
-                possibleMoves[move.key] = move.value
+                possibleMoves[move.key] = true
             }
         }
 
@@ -580,5 +594,21 @@ class MainDeskViewModel : ViewModel() {
         desk[61].figureName = "black_bishop"
         desk[62].figureName = "black_knight"
         desk[63].figureName = "black_rook"
+
+        _activityDesk.value = desk
+    }
+
+    // Конец игры
+    private fun gameOver() {
+        _gameOver.value = true
+        desk.clear()
+    }
+
+    // Перезапуск игры
+    fun gameRestart() {
+        desk.clear()
+        deskFill()
+        walkerName = 'w'
+        _gameOver.value = false
     }
 }
