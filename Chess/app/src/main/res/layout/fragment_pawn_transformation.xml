@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/backgroundView"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:background="#80737373"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+    
+    <ImageView
+        android:id="@+id/rookImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_chess_white_rook"
+        app:layout_constraintTop_toTopOf="@id/backgroundView"
+        app:layout_constraintStart_toStartOf="@id/backgroundView"
+        app:layout_constraintEnd_toStartOf="@id/knightImageView"
+        app:layout_constraintBottom_toBottomOf="@id/backgroundView"/>
+    
+    <ImageView
+        android:id="@+id/knightImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_chess_white_knight"
+        app:layout_constraintTop_toTopOf="@id/backgroundView"
+        app:layout_constraintStart_toEndOf="@id/rookImageView"
+        app:layout_constraintEnd_toStartOf="@id/bishopImageView"
+        app:layout_constraintBottom_toBottomOf="@id/backgroundView"/>
+    
+    <ImageView
+        android:id="@+id/bishopImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_chess_white_bishop"
+        app:layout_constraintTop_toTopOf="@id/backgroundView"
+        app:layout_constraintStart_toEndOf="@id/knightImageView"
+        app:layout_constraintEnd_toStartOf="@id/queenImageView"
+        app:layout_constraintBottom_toBottomOf="@id/backgroundView"/>
+
+    <ImageView
+        android:id="@+id/queenImageView"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:src="@drawable/ic_chess_white_queen"
+        app:layout_constraintTop_toTopOf="@id/backgroundView"
+        app:layout_constraintStart_toEndOf="@id/bishopImageView"
+        app:layout_constraintEnd_toEndOf="@id/backgroundView"
+        app:layout_constraintBottom_toBottomOf="@id/backgroundView"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

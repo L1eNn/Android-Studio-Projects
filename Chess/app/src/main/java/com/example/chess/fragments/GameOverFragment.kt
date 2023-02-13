@@ -25,7 +25,7 @@ class GameOverFragment : Fragment() {
         binding.retryButton.setOnClickListener {
             parentFragmentManager
                 .beginTransaction()
-                .replace(R.id.fragmentContainer, MainDeskFragment())
+                .replace(R.id.fragmentContainer, MainDeskFragment.newInstance(null, true))
                 .commit()
         }
 

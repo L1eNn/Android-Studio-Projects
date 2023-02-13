@@ -1,23 +1,24 @@
 package com.example.chess.fragments
 
 import android.graphics.Color
-import android.graphics.ColorSpace.Rgb
-import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.core.os.bundleOf
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.example.chess.Cell
 import com.example.chess.CellHasFigure
 import com.example.chess.Coordinates
 import com.example.chess.R
 import com.example.chess.databinding.FragmentDeskBinding
 import com.example.chess.view_models.MainDeskViewModel
+import kotlin.properties.Delegates
 
 class MainDeskFragment : Fragment() {
 
@@ -38,14 +39,30 @@ class MainDeskFragment : Fragment() {
 
     private lateinit var binding : FragmentDeskBinding
     private lateinit var desk : Map<Coordinates, CellHasFigure>
+    private lateinit var bundleCell: Cell
+    private var gameRestart by Delegates.notNull<Boolean>()
     private val viewModel: MainDeskViewModel by viewModels()
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentDeskBinding.inflate(inflater, container, false)
+
+        if (arguments != null) {
+            gameRestart = requireArguments().getBoolean(GAME_OVER)
+            if (requireArguments().getParcelable(CELL, Cell::class.java) != null) {
+                bundleCell = requireArguments().getParcelable(CELL, Cell::class.java)!!
+                viewModel.pawnTransform(bundleCell)
+            }
+        }
+
+        if (gameRestart) {
+            gameRestart = false
+            viewModel.gameRestart()
+        }
 
         createDesk()
 
@@ -176,6 +193,13 @@ class MainDeskFragment : Fragment() {
             }
         })
 
+        viewModel.transformablePawnCell.observe(viewLifecycleOwner, Observer {
+            parentFragmentManager
+                .beginTransaction()
+                .add(R.id.fragmentContainer, PawnTransformationFragment.newInstance(it))
+                .commit()
+        })
+
         return binding.root
     }
 
@@ -247,7 +271,17 @@ class MainDeskFragment : Fragment() {
         )
     }
 
-    private fun deskFill() {
+    companion object {
+        @JvmStatic private val CELL = "CELL"
+        @JvmStatic private val GAME_OVER = "GAME_OVER"
 
+        fun newInstance(cell: Cell?, gameOver: Boolean) : MainDeskFragment {
+            val args = Bundle()
+            args.putParcelable(CELL, cell)
+            args.putBoolean(GAME_OVER, gameOver)
+            val fragment = MainDeskFragment()
+            fragment.arguments = args
+            return fragment
+        }
     }
 }

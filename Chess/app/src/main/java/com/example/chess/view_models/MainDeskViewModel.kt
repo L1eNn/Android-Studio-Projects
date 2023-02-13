@@ -1,10 +1,10 @@
 package com.example.chess.view_models
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chess.Cell
-import com.example.chess.CellsPair
 import com.example.chess.Coordinates
 
 private var desk = mutableListOf<Cell>()
@@ -13,6 +13,8 @@ private var pickedCell = Cell(-1, -1, false, "")
 private var walkerName = 'w'
 private var canMoveMap = mapOf<Coordinates, Boolean>()
 private var possibleMoves = mutableMapOf<Coordinates, Boolean>()
+private var deskFilledBefore = false
+private var delayedGameOver = false
 
 class MainDeskViewModel : ViewModel() {
 
@@ -25,8 +27,14 @@ class MainDeskViewModel : ViewModel() {
     private var _gameOver = MutableLiveData<Boolean>()
     var gameOver : LiveData<Boolean> = _gameOver
 
+    private var _transformablePawnCell = MutableLiveData<Cell>()
+    var transformablePawnCell : LiveData<Cell> = _transformablePawnCell
+
     init {
-        deskFill()
+        if (!deskFilledBefore) {
+            deskFilledBefore = true
+            deskFill()
+        }
     }
 
     // Нажатие на клетку
@@ -64,9 +72,17 @@ class MainDeskViewModel : ViewModel() {
                     possibleMoves.clear()
 
                     if (pickedCell.figureName.substring(6).first() == 'p' && newPickedCell.row == 8) {
-                        //TODO Превращение пешки
+                        if (newPickedCell.figureName.last() == 'g') {
+                            _gameOver.value = true
+                        } else {
+                            _transformablePawnCell.value = Cell(newPickedCell.row, newPickedCell.column, true, pickedCell.figureName)
+                        }
                     } else if (pickedCell.figureName.substring(6).first() == 'p' && newPickedCell.row == 1) {
-                        //TODO Превращение пешки
+                        if (newPickedCell.figureName.last() == 'g') {
+                            _gameOver.value = true
+                        } else {
+                            _transformablePawnCell.value = Cell(newPickedCell.row, newPickedCell.column, true, pickedCell.figureName)
+                        }
                     }
 
                     if (newPickedCell.hasFigure && newPickedCell.figureName.last() == 'g') {
@@ -81,6 +97,17 @@ class MainDeskViewModel : ViewModel() {
                     desk[pickedCellIndex].figureName = ""
 
                     _activityDesk.value = desk
+
+//                    if (desk[newPickedCellIndex].figureName.substring(6).first() == 'p' && desk[newPickedCellIndex].row == 8) {
+//                        _transformablePawnCell.value = Cell(desk[newPickedCellIndex].row, desk[newPickedCellIndex].column, true, desk[newPickedCellIndex].figureName)
+//                    } else if (desk[newPickedCellIndex].figureName.substring(6).first() == 'p' && desk[newPickedCellIndex].row == 1) {
+//                        _transformablePawnCell.value = Cell(desk[newPickedCellIndex].row, desk[newPickedCellIndex].column, true, desk[newPickedCellIndex].figureName)
+//                    }
+//
+//                    if (newPickedCell.hasFigure && newPickedCell.figureName.last() == 'g') {
+//                        _gameOver.value = true
+//                    }
+
 
                     walkerName = if (walkerName == 'w') {
                         'b'
@@ -543,6 +570,18 @@ class MainDeskViewModel : ViewModel() {
         return canMoveMap
     }
 
+    // Превращение пешки в выбранную игроком фигуру
+    fun pawnTransform(cell: Cell) {
+        desk.forEach {
+            if (it.row == cell.row && it.column == cell.column) {
+                it.hasFigure = true
+                it.figureName = cell.figureName
+            }
+        }
+
+        _activityDesk.value = desk
+    }
+
     // Проверка на возможный ход для добавления в список возможных ходов который нужен для отрисовки
     private fun checkToMove(moves: Map<Coordinates, Boolean>) : MutableMap<Coordinates, Boolean> {
         val possibleMoves = mutableMapOf<Coordinates, Boolean>()
@@ -559,18 +598,18 @@ class MainDeskViewModel : ViewModel() {
     private fun deskFill() {
         for (i in 1..8) {
             for (j in 1..8) {
-                if (i in 3..6){
-                    desk.add(Cell(i,j, false,""))
+                if (i in 3..6) {
+                    desk.add(Cell(i, j, false, ""))
                 } else {
                     when (i) {
                         2 -> {
-                            desk.add(Cell(i,j, true,"white_pawn"))
+                            desk.add(Cell(i, j, true, "white_pawn"))
                         }
                         7 -> {
-                            desk.add(Cell(i,j, true,"black_pawn"))
+                            desk.add(Cell(i, j, true, "black_pawn"))
                         }
                         else -> {
-                            desk.add(Cell(i,j, true,""))
+                            desk.add(Cell(i, j, true, ""))
                         }
                     }
                 }

@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             supportFragmentManager
                 .beginTransaction()
-                .add(R.id.fragmentContainer, MainDeskFragment())
+                .add(R.id.fragmentContainer, MainDeskFragment.newInstance(null, false))
                 .commit()
         }
     }
