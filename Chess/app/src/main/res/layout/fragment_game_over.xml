@@ -9,7 +9,7 @@
         android:id="@+id/container"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#72A56E"
+        android:background="#339C2A"
         android:layout_marginVertical="250dp"
         android:layout_marginHorizontal="60dp"
         app:layout_constraintTop_toTopOf="parent"

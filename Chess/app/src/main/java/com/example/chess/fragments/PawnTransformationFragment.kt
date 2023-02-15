@@ -16,12 +16,13 @@ class PawnTransformationFragment : Fragment() {
 
     private lateinit var binding: FragmentPawnTransformationBinding
     private lateinit var requestCell: Cell
+    private var figureColorSymbol by Delegates.notNull<Char>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPawnTransformationBinding.inflate(inflater, container, false)
 
         if (arguments != null) {
@@ -36,19 +37,28 @@ class PawnTransformationFragment : Fragment() {
             }
         }
 
-        binding.rookImageView.setOnClickListener {onFigurePressed("rook")}
-        binding.knightImageView.setOnClickListener {onFigurePressed("knight")}
-        binding.bishopImageView.setOnClickListener {onFigurePressed("bishop")}
-        binding.queenImageView.setOnClickListener {onFigurePressed("queen")}
+        figureColorSymbol = requestCell.figureName.first()
+
+        if (figureColorSymbol == 'b') {
+            binding.rookImageView.setImageResource(R.drawable.ic_chess_black_rook)
+            binding.knightImageView.setImageResource(R.drawable.ic_chess_black_knight)
+            binding.bishopImageView.setImageResource(R.drawable.ic_chess_black_bishop)
+            binding.queenImageView.setImageResource(R.drawable.ic_chess_black_queen)
+        }
+
+        binding.rookImageView.setOnClickListener {onFigurePressed("rook", figureColorSymbol)}
+        binding.knightImageView.setOnClickListener {onFigurePressed("knight", figureColorSymbol)}
+        binding.bishopImageView.setOnClickListener {onFigurePressed("bishop", figureColorSymbol)}
+        binding.queenImageView.setOnClickListener {onFigurePressed("queen", figureColorSymbol)}
 
         return binding.root
     }
 
-    private fun onFigurePressed(figureName: String) {
+    private fun onFigurePressed(figureName: String, figureColor: Char) {
 
         var name = ""
 
-        name = if (requestCell.figureName.first() == 'w') {
+        name = if (figureColor == 'w') {
             "white_$figureName"
         } else {
             "black_$figureName"

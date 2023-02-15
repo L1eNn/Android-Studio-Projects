@@ -191,10 +191,10 @@ class MainDeskFragment : Fragment() {
         })
 
         viewModel.gameOver.observe(viewLifecycleOwner, Observer{
-            if (it == true) {
+            if (it.values.first()) {
                 parentFragmentManager
                     .beginTransaction()
-                    .add(R.id.fragmentContainer, GameOverFragment())
+                    .add(R.id.fragmentContainer, GameOverFragment.newInstance(it.keys.first()))
                     .commit()
             }
         })

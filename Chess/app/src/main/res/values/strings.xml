@@ -1,4 +1,4 @@
 <resources>
     <string name="app_name">Chess</string>
-    <string name="win_text">win</string>
+    <string name="win_text">%s wins</string>
 </resources>

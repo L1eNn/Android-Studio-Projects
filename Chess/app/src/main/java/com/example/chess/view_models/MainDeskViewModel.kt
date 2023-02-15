@@ -23,8 +23,8 @@ class MainDeskViewModel : ViewModel() {
     private var _possibleMoveCells = MutableLiveData<Map<Coordinates, Boolean>>()
     var possibleMoveCells : LiveData<Map<Coordinates, Boolean>> = _possibleMoveCells
 
-    private var _gameOver = MutableLiveData<Boolean>()
-    var gameOver : LiveData<Boolean> = _gameOver
+    private var _gameOver = MutableLiveData<Map<Char, Boolean>>()
+    var gameOver : LiveData<Map<Char, Boolean>> = _gameOver
 
     private var _transformablePawnCell = MutableLiveData<Cell>()
     var transformablePawnCell : LiveData<Cell> = _transformablePawnCell
@@ -72,20 +72,20 @@ class MainDeskViewModel : ViewModel() {
 
                     if (pickedCell.figureName.substring(6).first() == 'p' && newPickedCell.row == 8) {
                         if (newPickedCell.figureName.last() == 'g') {
-                            _gameOver.value = true
+                            _gameOver.value = mapOf(pickedCell.figureName.first() to true)
                         } else {
                             _transformablePawnCell.value = Cell(newPickedCell.row, newPickedCell.column, true, pickedCell.figureName)
                         }
                     } else if (pickedCell.figureName.substring(6).first() == 'p' && newPickedCell.row == 1) {
                         if (newPickedCell.figureName.last() == 'g') {
-                            _gameOver.value = true
+                            _gameOver.value = mapOf(pickedCell.figureName.first() to true)
                         } else {
                             _transformablePawnCell.value = Cell(newPickedCell.row, newPickedCell.column, true, pickedCell.figureName)
                         }
                     }
 
                     if (newPickedCell.hasFigure && newPickedCell.figureName.last() == 'g') {
-                        _gameOver.value = true
+                        _gameOver.value = mapOf(pickedCell.figureName.first() to true)
                     }
 
                     val newPickedCellIndex = desk.indexOf(newPickedCell)
@@ -630,6 +630,6 @@ class MainDeskViewModel : ViewModel() {
         desk.clear()
         deskFill()
         walkerName = 'w'
-        _gameOver.value = false
+        _gameOver.value = mapOf(' ' to false)
     }
 }

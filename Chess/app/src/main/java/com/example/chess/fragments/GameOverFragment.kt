@@ -19,8 +19,15 @@ class GameOverFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentGameOverBinding.inflate(inflater, container, false)
+
+        val winnerColor = arguments?.getChar(WINNER_COLOR)
+        if (winnerColor == 'w') {
+            binding.winTextView.text = getString(R.string.win_text, "White")
+        } else {
+            binding.winTextView.text = getString(R.string.win_text, "Black")
+        }
 
         binding.retryButton.setOnClickListener {
             parentFragmentManager
@@ -34,6 +41,19 @@ class GameOverFragment : Fragment() {
         }
 
         return binding.root
+    }
+
+    companion object {
+        @JvmStatic val WINNER_COLOR = "WINNER_COLOR"
+
+        fun newInstance(winnerColorSymbol: Char) : GameOverFragment {
+            val args = Bundle()
+            args.putChar(WINNER_COLOR, winnerColorSymbol)
+            val fragment = GameOverFragment()
+            fragment.arguments = args
+
+            return fragment
+        }
     }
 
 }
