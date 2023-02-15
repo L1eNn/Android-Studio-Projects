@@ -14,7 +14,6 @@ private var walkerName = 'w'
 private var canMoveMap = mapOf<Coordinates, Boolean>()
 private var possibleMoves = mutableMapOf<Coordinates, Boolean>()
 private var deskFilledBefore = false
-private var delayedGameOver = false
 
 class MainDeskViewModel : ViewModel() {
 
@@ -97,17 +96,6 @@ class MainDeskViewModel : ViewModel() {
                     desk[pickedCellIndex].figureName = ""
 
                     _activityDesk.value = desk
-
-//                    if (desk[newPickedCellIndex].figureName.substring(6).first() == 'p' && desk[newPickedCellIndex].row == 8) {
-//                        _transformablePawnCell.value = Cell(desk[newPickedCellIndex].row, desk[newPickedCellIndex].column, true, desk[newPickedCellIndex].figureName)
-//                    } else if (desk[newPickedCellIndex].figureName.substring(6).first() == 'p' && desk[newPickedCellIndex].row == 1) {
-//                        _transformablePawnCell.value = Cell(desk[newPickedCellIndex].row, desk[newPickedCellIndex].column, true, desk[newPickedCellIndex].figureName)
-//                    }
-//
-//                    if (newPickedCell.hasFigure && newPickedCell.figureName.last() == 'g') {
-//                        _gameOver.value = true
-//                    }
-
 
                     walkerName = if (walkerName == 'w') {
                         'b'
@@ -635,12 +623,6 @@ class MainDeskViewModel : ViewModel() {
         desk[63].figureName = "black_rook"
 
         _activityDesk.value = desk
-    }
-
-    // Конец игры
-    private fun gameOver() {
-        _gameOver.value = true
-        desk.clear()
     }
 
     // Перезапуск игры

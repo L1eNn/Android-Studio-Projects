@@ -10,13 +10,13 @@ import androidx.fragment.app.Fragment
 import com.example.chess.Cell
 import com.example.chess.R
 import com.example.chess.databinding.FragmentPawnTransformationBinding
+import kotlin.properties.Delegates
 
 class PawnTransformationFragment : Fragment() {
 
     private lateinit var binding: FragmentPawnTransformationBinding
     private lateinit var requestCell: Cell
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -25,7 +25,15 @@ class PawnTransformationFragment : Fragment() {
         binding = FragmentPawnTransformationBinding.inflate(inflater, container, false)
 
         if (arguments != null) {
-            requestCell = requireArguments().getParcelable(CELL, Cell::class.java)!!
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (requireArguments().getParcelable(CELL, Cell::class.java) != null) {
+                    requestCell = requireArguments().getParcelable(CELL, Cell::class.java)!!
+                }
+            } else {
+                if (requireArguments().getParcelable<Cell>(CELL) != null) {
+                    requestCell = requireArguments().getParcelable(CELL)!!
+                }
+            }
         }
 
         binding.rookImageView.setOnClickListener {onFigurePressed("rook")}

@@ -3,12 +3,10 @@ package com.example.chess.fragments
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -43,7 +41,7 @@ class MainDeskFragment : Fragment() {
     private var gameRestart by Delegates.notNull<Boolean>()
     private val viewModel: MainDeskViewModel by viewModels()
 
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -53,9 +51,17 @@ class MainDeskFragment : Fragment() {
 
         if (arguments != null) {
             gameRestart = requireArguments().getBoolean(GAME_OVER)
-            if (requireArguments().getParcelable(CELL, Cell::class.java) != null) {
-                bundleCell = requireArguments().getParcelable(CELL, Cell::class.java)!!
-                viewModel.pawnTransform(bundleCell)
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (requireArguments().getParcelable(CELL, Cell::class.java) != null) {
+                    bundleCell = requireArguments().getParcelable(CELL, Cell::class.java)!!
+                    viewModel.pawnTransform(bundleCell)
+                }
+            } else {
+                if (requireArguments().getParcelable<Cell>(CELL) != null) {
+                    bundleCell = requireArguments().getParcelable(CELL)!!
+                    viewModel.pawnTransform(bundleCell)
+                }
             }
         }
 
